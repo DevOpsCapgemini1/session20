@@ -1,6 +1,6 @@
 @description('Base name of the resource such as web app name and app service plan ')
 @minLength(2)
-param webAppName string = 'host-02-westeu'
+param webAppName string = 'host-02-northeu'
 
 @description('The SKU of App Service Plan ')
 param sku string = 'S1'
@@ -9,7 +9,7 @@ param sku string = 'S1'
 param linuxFxVersion string = 'DOCKER|nginx:latest'
 
 @description('Location for all resources.')
-param location string = 'westeurope'
+param location string = 'northeurope'
 
 var webAppPortalName_var = '${webAppName}-webapp'
 var appServicePlanName_var = 'AppServicePlan-${webAppName}'
