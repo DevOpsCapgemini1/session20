@@ -1,0 +1,78 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.10.61.36676",
+      "templateHash": "16182499564593302102"
+    }
+  },
+  "parameters": {
+    "webAppName": {
+      "type": "string",
+      "defaultValue": "host-01",
+      "minLength": 2,
+      "metadata": {
+        "description": "Base name of the resource such as web app name and app service plan "
+      }
+    },
+    "sku": {
+      "type": "string",
+      "defaultValue": "S1",
+      "metadata": {
+        "description": "The SKU of App Service Plan "
+      }
+    },
+    "linuxFxVersion": {
+      "type": "string",
+      "defaultValue": "php|7.4",
+      "metadata": {
+        "description": "The Runtime stack of current web app"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "westeurope",
+      "metadata": {
+        "description": "Location for all resources."
+      }
+    }
+  },
+  "variables": {
+    "webAppPortalName_var": "[format('{0}-webapp', parameters('webAppName'))]",
+    "appServicePlanName_var": "[format('AppServicePlan-{0}', parameters('webAppName'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2020-06-01",
+      "name": "[variables('appServicePlanName_var')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "[parameters('sku')]"
+      },
+      "kind": "linux",
+      "properties": {
+        "reserved": true
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2020-06-01",
+      "name": "[variables('webAppPortalName_var')]",
+      "location": "[parameters('location')]",
+      "kind": "app",
+      "properties": {
+        "httpsOnly": false,
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName_var'))]",
+        "siteConfig": {
+          "linuxFxVersion": "[parameters('linuxFxVersion')]"
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName_var'))]"
+      ]
+    }
+  ]
+}
