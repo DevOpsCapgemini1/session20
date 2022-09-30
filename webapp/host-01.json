@@ -5,42 +5,33 @@
     "_generator": {
       "name": "bicep",
       "version": "0.10.61.36676",
-      "templateHash": "17401094270151385677"
+      "templateHash": "4482359659697493328"
     }
   },
   "parameters": {
     "webAppName": {
       "type": "string",
-      "defaultValue": "host-01-westeu",
-      "minLength": 2,
-      "metadata": {
-        "description": "Base name of the resource such as web app name and app service plan "
-      }
+      "defaultValue": "host-01-westeu"
     },
     "sku": {
       "type": "string",
-      "defaultValue": "S1",
-      "metadata": {
-        "description": "The SKU of App Service Plan "
-      }
+      "defaultValue": "S1"
     },
     "linuxFxVersion": {
       "type": "string",
-      "defaultValue": "DOCKER|mcr.microsoft.com/appsvc/staticsite:latest",
-      "metadata": {
-        "description": "The Runtime stack of current web app"
-      }
+      "defaultValue": "DOCKER|mbidzinsk/website-session20:latest"
     },
     "location": {
       "type": "string",
-      "defaultValue": "westeurope",
-      "metadata": {
-        "description": "Location for all resources."
-      }
+      "defaultValue": "westeurope"
+    },
+    "numberOfWorkers": {
+      "type": "int",
+      "defaultValue": 1
     },
     "dockerRegistryUrl": {
       "type": "string",
-      "defaultValue": "https://mcr.microsoft.com"
+      "defaultValue": "https://index.docker.io"
     }
   },
   "variables": {
@@ -50,7 +41,7 @@
   "resources": [
     {
       "type": "Microsoft.Web/serverfarms",
-      "apiVersion": "2020-06-01",
+      "apiVersion": "2018-11-01",
       "name": "[variables('appServicePlanName_var')]",
       "location": "[parameters('location')]",
       "sku": {
@@ -58,15 +49,15 @@
       },
       "kind": "linux",
       "properties": {
+        "numberOfWorkers": "[parameters('numberOfWorkers')]",
         "reserved": true
       }
     },
     {
       "type": "Microsoft.Web/sites",
-      "apiVersion": "2020-06-01",
+      "apiVersion": "2018-11-01",
       "name": "[variables('webAppPortalName_var')]",
       "location": "[parameters('location')]",
-      "kind": "app",
       "properties": {
         "httpsOnly": false,
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName_var'))]",
@@ -75,8 +66,13 @@
             {
               "name": "DOCKER_REGISTRY_SERVER_URL",
               "value": "[parameters('dockerRegistryUrl')]"
+            },
+            {
+              "name": "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
+              "value": "false"
             }
           ],
+          "alwaysOn": true,
           "linuxFxVersion": "[parameters('linuxFxVersion')]"
         }
       },

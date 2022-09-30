@@ -1,0 +1,84 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.10.61.36676",
+      "templateHash": "5202122512317878838"
+    }
+  },
+  "parameters": {
+    "webAppName": {
+      "type": "string",
+      "defaultValue": "dr-sr"
+    },
+    "sku": {
+      "type": "string",
+      "defaultValue": "S1"
+    },
+    "linuxFxVersion": {
+      "type": "string",
+      "defaultValue": "DOCKER|mbidzinsk/sorry-session20:latest"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "uksouth"
+    },
+    "numberOfWorkers": {
+      "type": "int",
+      "defaultValue": 1
+    },
+    "dockerRegistryUrl": {
+      "type": "string",
+      "defaultValue": "https://index.docker.io"
+    }
+  },
+  "variables": {
+    "webAppPortalName_var": "[format('{0}-webapp', parameters('webAppName'))]",
+    "appServicePlanName_var": "[format('AppServicePlan-{0}', parameters('webAppName'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2018-11-01",
+      "name": "[variables('appServicePlanName_var')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "[parameters('sku')]"
+      },
+      "kind": "linux",
+      "properties": {
+        "numberOfWorkers": "[parameters('numberOfWorkers')]",
+        "reserved": true
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2018-11-01",
+      "name": "[variables('webAppPortalName_var')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "httpsOnly": false,
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName_var'))]",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "DOCKER_REGISTRY_SERVER_URL",
+              "value": "[parameters('dockerRegistryUrl')]"
+            },
+            {
+              "name": "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
+              "value": "false"
+            }
+          ],
+          "alwaysOn": true,
+          "linuxFxVersion": "[parameters('linuxFxVersion')]"
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName_var'))]"
+      ]
+    }
+  ]
+}

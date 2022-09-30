@@ -1,0 +1,67 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.10.61.36676",
+      "templateHash": "16245676191315846282"
+    }
+  },
+  "parameters": {
+    "relativeName": {
+      "type": "string",
+      "defaultValue": "mbidzins-tm-01"
+    },
+    "trafficManagerName": {
+      "type": "string",
+      "defaultValue": "mbidzins-tm-01"
+    },
+    "webAppNames": {
+      "type": "array",
+      "defaultValue": [
+        {
+          "name": "host-01-westeu-webapp"
+        },
+        {
+          "name": "host-02-northeu-webapp"
+        }
+      ]
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Network/trafficmanagerprofiles",
+      "apiVersion": "2018-08-01",
+      "name": "[parameters('trafficManagerName')]",
+      "location": "global",
+      "properties": {
+        "copy": [
+          {
+            "name": "endpoints",
+            "count": "[length(parameters('webAppNames'))]",
+            "input": {
+              "name": "[parameters('webAppNames')[copyIndex('endpoints')].name]",
+              "type": "Microsoft.Network/trafficManagerProfiles/azureEndpoints",
+              "properties": {
+                "targetResourceId": "[resourceId(resourceGroup().name, 'microsoft.web/sites', parameters('webAppNames')[copyIndex('endpoints')].name)]",
+                "endpointStatus": "Enabled"
+              }
+            }
+          }
+        ],
+        "trafficRoutingMethod": "Performance",
+        "maxReturn": 0,
+        "dnsConfig": {
+          "relativeName": "[parameters('relativeName')]",
+          "ttl": 60
+        },
+        "monitorConfig": {
+          "protocol": "HTTP",
+          "port": 80,
+          "path": "/"
+        }
+      }
+    }
+  ]
+}

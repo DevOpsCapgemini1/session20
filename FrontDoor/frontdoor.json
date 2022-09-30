@@ -1,0 +1,139 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.10.61.36676",
+      "templateHash": "3081248264397217780"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Cdn/profiles",
+      "apiVersion": "2021-06-01",
+      "name": "mbidzins-site-fd",
+      "location": "Global",
+      "properties": {
+        "originResponseTimeoutSeconds": 60
+      },
+      "tags": {},
+      "sku": {
+        "name": "Standard_AzureFrontDoor"
+      }
+    },
+    {
+      "type": "Microsoft.Cdn/profiles/afdEndpoints",
+      "apiVersion": "2021-06-01",
+      "name": "[format('{0}/{1}', 'mbidzins-site-fd', 'fd-endpoint')]",
+      "location": "Global",
+      "properties": {
+        "enabledState": "Enabled"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Cdn/profiles', 'mbidzins-site-fd')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Cdn/profiles/originGroups",
+      "apiVersion": "2021-06-01",
+      "name": "[format('{0}/{1}', 'mbidzins-site-fd', 'origin-group-01')]",
+      "properties": {
+        "loadBalancingSettings": {
+          "sampleSize": 4,
+          "successfulSamplesRequired": 3,
+          "additionalLatencyInMilliseconds": 50
+        },
+        "healthProbeSettings": {
+          "probePath": "/",
+          "probeRequestType": "HEAD",
+          "probeProtocol": "Http",
+          "probeIntervalInSeconds": 100
+        },
+        "sessionAffinityState": "Disabled"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Cdn/profiles', 'mbidzins-site-fd')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Cdn/profiles/originGroups/origins",
+      "apiVersion": "2021-06-01",
+      "name": "[format('{0}/{1}/{2}', 'mbidzins-site-fd', 'origin-group-01', 'origin-01')]",
+      "properties": {
+        "hostName": "host-01-westeu-webapp.azurewebsites.net",
+        "httpPort": 80,
+        "httpsPort": 443,
+        "originHostHeader": "host-01-westeu-webapp.azurewebsites.net",
+        "priority": 1,
+        "weight": 1000,
+        "enforceCertificateNameCheck": true,
+        "enabledState": "Enabled"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Cdn/profiles/originGroups', 'mbidzins-site-fd', 'origin-group-01')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Cdn/profiles/originGroups/origins",
+      "apiVersion": "2021-06-01",
+      "name": "[format('{0}/{1}/{2}', 'mbidzins-site-fd', 'origin-group-01', 'origin-02')]",
+      "properties": {
+        "hostName": "host-02-northeu-webapp.azurewebsites.net",
+        "httpPort": 80,
+        "httpsPort": 443,
+        "originHostHeader": "host-02-northeu-webapp.azurewebsites.net",
+        "priority": 1,
+        "weight": 1000,
+        "enforceCertificateNameCheck": true,
+        "enabledState": "Enabled"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Cdn/profiles/originGroups', 'mbidzins-site-fd', 'origin-group-01')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Cdn/profiles/originGroups/origins",
+      "apiVersion": "2021-06-01",
+      "name": "[format('{0}/{1}/{2}', 'mbidzins-site-fd', 'origin-group-01', 'origin-03')]",
+      "properties": {
+        "hostName": "dr-sr-webapp.azurewebsites.net",
+        "httpPort": 80,
+        "httpsPort": 443,
+        "originHostHeader": "dr-sr-webapp.azurewebsites.net",
+        "priority": 5,
+        "weight": 1000,
+        "enforceCertificateNameCheck": true,
+        "enabledState": "Enabled"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Cdn/profiles/originGroups', 'mbidzins-site-fd', 'origin-group-01')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Cdn/profiles/afdEndpoints/routes",
+      "apiVersion": "2021-06-01",
+      "name": "[format('{0}/{1}/{2}', 'mbidzins-site-fd', 'fd-endpoint', 'route-01')]",
+      "properties": {
+        "customDomains": [],
+        "originGroup": {
+          "id": "[resourceId('Microsoft.Cdn/profiles/originGroups', 'mbidzins-site-fd', 'origin-group-01')]"
+        },
+        "ruleSets": [],
+        "supportedProtocols": ["Https"],
+        "patternsToMatch": ["/*"],
+        "forwardingProtocol": "HttpsOnly",
+        "linkToDefaultDomain": "Enabled",
+        "httpsRedirect": "Enabled",
+        "enabledState": "Enabled"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Cdn/profiles/afdEndpoints', 'mbidzins-site-fd', 'fd-endpoint')]",
+        "[resourceId('Microsoft.Cdn/profiles/originGroups', 'mbidzins-site-fd', 'origin-group-01')]",
+        "[resourceId('Microsoft.Cdn/profiles/originGroups/origins', 'mbidzins-site-fd', 'origin-group-01', 'origin-01')]",
+        "[resourceId('Microsoft.Cdn/profiles/originGroups/origins', 'mbidzins-site-fd', 'origin-group-01', 'origin-02')]",
+        "[resourceId('Microsoft.Cdn/profiles/originGroups/origins', 'mbidzins-site-fd', 'origin-group-01', 'origin-03')]"
+      ]
+    }
+  ]
+}
