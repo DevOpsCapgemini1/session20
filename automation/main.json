@@ -4,24 +4,18 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.10.61.36676",
-      "templateHash": "5544461927820369174"
+      "version": "0.11.1.770",
+      "templateHash": "8160656109145579605"
     }
   },
   "parameters": {
     "accName": {
       "type": "string",
-      "defaultValue": "AutomationAccount",
-      "metadata": {
-        "description": "Name of the automation account"
-      }
+      "defaultValue": "AutomationAccount"
     },
     "location": {
       "type": "string",
-      "defaultValue": "[resourceGroup().location]",
-      "metadata": {
-        "description": "Location for automation account"
-      }
+      "defaultValue": "[resourceGroup().location]"
     },
     "PowerShellRunbook1": {
       "type": "string",
@@ -176,6 +170,70 @@
         "interval": 1,
         "startTime": "2022-10-01T13:45:00+02:00",
         "timeZone": "Europe/Warsaw"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Automation/automationAccounts', parameters('accName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Automation/automationAccounts/jobSchedules",
+      "apiVersion": "2020-01-13-preview",
+      "name": "[format('{0}/{1}', parameters('accName'), parameters('PowerShellRunbook1'))]",
+      "properties": {
+        "runbook": {
+          "name": "[parameters('PowerShellRunbook1')]"
+        },
+        "schedule": {
+          "name": "[parameters('PowerShellRunbook1')]"
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Automation/automationAccounts', parameters('accName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Automation/automationAccounts/jobSchedules",
+      "apiVersion": "2020-01-13-preview",
+      "name": "[format('{0}/{1}', parameters('accName'), parameters('PowerShellRunbook4'))]",
+      "properties": {
+        "runbook": {
+          "name": "[parameters('PowerShellRunbook2')]"
+        },
+        "schedule": {
+          "name": "[parameters('PowerShellRunbook2')]"
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Automation/automationAccounts', parameters('accName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Automation/automationAccounts/jobSchedules",
+      "apiVersion": "2020-01-13-preview",
+      "name": "[format('{0}/{1}', parameters('accName'), parameters('PowerShellRunbook3'))]",
+      "properties": {
+        "runbook": {
+          "name": "[parameters('PowerShellRunbook3')]"
+        },
+        "schedule": {
+          "name": "[parameters('PowerShellRunbook3')]"
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Automation/automationAccounts', parameters('accName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Automation/automationAccounts/jobSchedules",
+      "apiVersion": "2020-01-13-preview",
+      "name": "[format('{0}/{1}', parameters('accName'), parameters('PowerShellRunbook4'))]",
+      "properties": {
+        "runbook": {
+          "name": "[parameters('PowerShellRunbook4')]"
+        },
+        "schedule": {
+          "name": "[parameters('PowerShellRunbook4')]"
+        }
       },
       "dependsOn": [
         "[resourceId('Microsoft.Automation/automationAccounts', parameters('accName'))]"

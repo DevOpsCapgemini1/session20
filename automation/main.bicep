@@ -22,7 +22,7 @@ resource accName_resource 'Microsoft.Automation/automationAccounts@2021-06-22' =
   dependsOn: []
 }
 
-resource accName_PowerShellRunbook1 'Microsoft.Automation/automationAccounts/runbooks@2019-06-01' = {
+resource automationRunbook1 'Microsoft.Automation/automationAccounts/runbooks@2019-06-01' = {
   parent: accName_resource
   name: PowerShellRunbook1
   location: location
@@ -36,7 +36,7 @@ resource accName_PowerShellRunbook1 'Microsoft.Automation/automationAccounts/run
   }
 }
 
-resource accName_PowerShellRunbook2 'Microsoft.Automation/automationAccounts/runbooks@2019-06-01' = {
+resource automationRunbook2 'Microsoft.Automation/automationAccounts/runbooks@2019-06-01' = {
   parent: accName_resource
   name: PowerShellRunbook2
   location: location
@@ -50,7 +50,7 @@ resource accName_PowerShellRunbook2 'Microsoft.Automation/automationAccounts/run
   }
 }
 
-resource accName_PowerShellRunbook3 'Microsoft.Automation/automationAccounts/runbooks@2019-06-01' = {
+resource automationRunbook3 'Microsoft.Automation/automationAccounts/runbooks@2019-06-01' = {
   parent: accName_resource
   name: PowerShellRunbook3
   location: location
@@ -64,7 +64,7 @@ resource accName_PowerShellRunbook3 'Microsoft.Automation/automationAccounts/run
   }
 }
 
-resource accName_PowerShellRunbook4 'Microsoft.Automation/automationAccounts/runbooks@2019-06-01' = {
+resource automationRunbook4 'Microsoft.Automation/automationAccounts/runbooks@2019-06-01' = {
   parent: accName_resource
   name: PowerShellRunbook4
   location: location
@@ -78,7 +78,7 @@ resource accName_PowerShellRunbook4 'Microsoft.Automation/automationAccounts/run
   }
 }
 
-resource Microsoft_Automation_automationAccounts_schedules_accName_PowerShellRunbook1 'Microsoft.Automation/automationAccounts/schedules@2020-01-13-preview' = {
+resource schedule1 'Microsoft.Automation/automationAccounts/schedules@2020-01-13-preview' = {
   parent: accName_resource
   name: PowerShellRunbook1
   properties: {
@@ -90,7 +90,7 @@ resource Microsoft_Automation_automationAccounts_schedules_accName_PowerShellRun
   }
 }
 
-resource Microsoft_Automation_automationAccounts_schedules_accName_PowerShellRunbook2 'Microsoft.Automation/automationAccounts/schedules@2020-01-13-preview' = {
+resource schedule2 'Microsoft.Automation/automationAccounts/schedules@2020-01-13-preview' = {
   parent: accName_resource
   name: PowerShellRunbook2
   properties: {
@@ -102,7 +102,7 @@ resource Microsoft_Automation_automationAccounts_schedules_accName_PowerShellRun
   }
 }
 
-resource Microsoft_Automation_automationAccounts_schedules_accName_PowerShellRunbook3 'Microsoft.Automation/automationAccounts/schedules@2020-01-13-preview' = {
+resource schedule3 'Microsoft.Automation/automationAccounts/schedules@2020-01-13-preview' = {
   parent: accName_resource
   name: PowerShellRunbook3
   properties: {
@@ -114,7 +114,7 @@ resource Microsoft_Automation_automationAccounts_schedules_accName_PowerShellRun
   }
 }
 
-resource Microsoft_Automation_automationAccounts_schedules_accName_PowerShellRunbook4 'Microsoft.Automation/automationAccounts/schedules@2020-01-13-preview' = {
+resource schedule4 'Microsoft.Automation/automationAccounts/schedules@2020-01-13-preview' = {
   parent: accName_resource
   name: PowerShellRunbook4
   properties: {
@@ -123,5 +123,54 @@ resource Microsoft_Automation_automationAccounts_schedules_accName_PowerShellRun
     interval: 1
     startTime: '2022-10-01T13:45:00+02:00'
     timeZone: 'Europe/Warsaw'
+  }
+}
+resource jobSchedule1 'Microsoft.Automation/automationAccounts/jobSchedules@2020-01-13-preview' = {
+  parent: accName_resource
+  name: PowerShellRunbook1
+  properties: {
+    runbook: {
+      name: PowerShellRunbook1
+    }
+    schedule: {
+      name: PowerShellRunbook1
+    }
+  }
+}
+
+resource jobSchedule2 'Microsoft.Automation/automationAccounts/jobSchedules@2020-01-13-preview' = {
+  parent: accName_resource
+  name: PowerShellRunbook4
+  properties: {
+    runbook: {
+      name: PowerShellRunbook2
+    }
+    schedule: {
+      name: PowerShellRunbook2
+    }
+  }
+}
+resource jobSchedule3 'Microsoft.Automation/automationAccounts/jobSchedules@2020-01-13-preview' = {
+  parent: accName_resource
+  name: PowerShellRunbook3
+  properties: {
+    runbook: {
+      name: PowerShellRunbook3
+    }
+    schedule: {
+      name: PowerShellRunbook3
+    }
+  }
+}
+resource jobSchedule4 'Microsoft.Automation/automationAccounts/jobSchedules@2020-01-13-preview' = {
+  parent: accName_resource
+  name: PowerShellRunbook4
+  properties: {
+    runbook: {
+      name: PowerShellRunbook4
+    }
+    schedule: {
+      name: PowerShellRunbook4
+    }
   }
 }
