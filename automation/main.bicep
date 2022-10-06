@@ -1,7 +1,4 @@
-@description('Name of the automation account')
 param accName string = 'AutomationAccount'
-
-@description('Location for automation account')
 param location string = resourceGroup().location
 param PowerShellRunbook1 string = 'host-1-turn-on'
 param PowerShellRunbook2 string = 'host-1-turn-off'
